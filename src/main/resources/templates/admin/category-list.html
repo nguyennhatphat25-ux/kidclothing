@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quản lý Danh Mục - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+<div class="flex min-h-screen">
+    <div th:replace="~{admin/fragments :: sidebar('categories')}"></div>
+
+    <main class="flex-1 p-10 bg-gray-100">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center mb-8 border-b pb-4">
+                <h2 class="text-2xl font-bold text-gray-800 uppercase tracking-tight">
+                    <i class="fa-solid fa-list text-blue-600 mr-2"></i>Quản lý Danh Mục Quần Áo
+                </h2>
+                <a th:href="@{/admin/categories/add}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition">
+                    <i class="fa-solid fa-plus mr-2"></i> Thêm Danh Mục Mới
+                </a>
+            </div>
+
+            <table class="w-full text-left border-separate border-spacing-y-2">
+                <thead>
+                <tr class="bg-gray-50 text-gray-600 uppercase text-xs font-bold tracking-wider">
+                    <th class="px-4 py-2 border-b rounded-tl-lg">ID</th>
+                    <th class="px-4 py-2 border-b">Tên Danh Mục (Bé Trai, Bé Gái...)</th>
+                    <th class="px-4 py-2 border-b text-center rounded-tr-lg">Thao Tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(categories)}"><td colspan="3" class="p-8 text-center text-gray-400">Chưa có danh mục nào.</td></tr>
+                <tr th:each="c : ${categories}" class="bg-gray-50 hover:bg-blue-50 transition shadow-sm rounded-lg">
+                    <td class="px-4 py-4 rounded-l-lg border font-mono text-gray-700" th:text="${c.id}"></td>
+                    <td class="px-4 py-4 border font-medium text-gray-900" th:text="${c.name}"></td>
+                    <td class="px-4 py-4 rounded-r-lg border text-center flex items-center justify-center gap-2">
+                        <a th:href="@{/admin/categories/edit/{id}(id=${c.id})}" class="text-blue-500 hover:bg-blue-100 p-2 rounded transition"><i class="fa-solid fa-edit"></i> Sửa</a>
+                        <a th:href="@{/admin/categories/delete/{id}(id=${c.id})}" class="text-red-400 hover:bg-red-50 p-2 rounded transition" onclick="return confirm('Xóa danh mục này?');"><i class="fa-solid fa-trash"></i> Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

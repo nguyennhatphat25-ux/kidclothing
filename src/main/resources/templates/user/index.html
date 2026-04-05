@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>KidClothing - Thời Trang Trẻ Em</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-white font-sans text-gray-800 flex flex-col min-h-screen m-0 p-0">
+
+<div class="bg-pink-500 text-white text-sm text-center py-2 font-medium tracking-wide w-full">
+    <i class="fa-solid fa-gift mr-2"></i> Miễn phí giao hàng toàn quốc cho đơn từ 500.000Đ
+</div>
+
+<header class="border-b border-pink-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
+        <a th:href="@{/}" class="text-3xl font-extrabold text-pink-600 flex items-center gap-2 hover:text-pink-700 transition">
+            <i class="fa-solid fa-face-smile-wink text-pink-500"></i> KidClothing
+        </a>
+
+        <form th:action="@{/search}" method="get" class="flex-1 max-w-xl mx-8 relative">
+            <input type="text" name="keyword" class="w-full border-2 border-pink-200 rounded-full pl-5 pr-12 py-2.5 focus:outline-none focus:border-pink-500 transition shadow-sm text-gray-700" placeholder="Ba mẹ muốn tìm đồ gì cho bé yêu?">
+            <button type="submit" class="absolute right-4 top-3 text-pink-400 hover:text-pink-600 transition"><i class="fa-solid fa-magnifying-glass text-lg"></i></button>
+        </form>
+
+        <div class="flex items-center space-x-6">
+            <a th:href="@{/profile}" class="text-gray-500 hover:text-pink-600 flex flex-col items-center transition">
+                <i class="fa-regular fa-user text-xl mb-1"></i>
+                <span class="text-xs font-semibold">Tài khoản</span>
+            </a>
+
+            <a th:href="@{/cart}" class="text-gray-500 hover:text-pink-600 flex flex-col items-center transition relative">
+                <div class="relative">
+                    <i class="fa-solid fa-bag-shopping text-2xl mb-1"></i>
+                    <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow border border-white">Giỏ</span>
+                </div>
+                <span class="text-xs font-semibold">Giỏ hàng</span>
+            </a>
+        </div>
+    </div>
+
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ul class="flex justify-center space-x-8 font-bold text-gray-600 py-3 text-sm uppercase tracking-wider overflow-x-auto">
+            <li><a th:href="@{/}" class="text-pink-600 border-b-2 border-pink-600 pb-1 whitespace-nowrap">Trang Chủ</a></li>
+            <li th:each="cat : ${menuCategories}">
+                <a th:href="@{/category/{id}(id=${cat.id})}" class="hover:text-pink-500 transition whitespace-nowrap" th:text="${cat.name}">Danh mục</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main class="flex-grow">
+    <div class="w-full bg-pink-50 py-16 flex items-center justify-center mb-10 border-b border-pink-100">
+        <div class="text-center px-4">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-pink-600 mb-4 drop-shadow-sm">Bộ Sưu Tập Bé Yêu Mùa Hè</h1>
+            <p class="text-lg text-pink-700 mb-8 font-medium">Thoáng mát - Mềm mại - An toàn tuyệt đối cho làn da bé</p>
+            <a href="#" class="inline-block bg-pink-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-pink-600 transition transform hover:-translate-y-1">Khám Phá Ngay</a>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-extrabold text-gray-800 uppercase relative inline-block">
+                Hàng Mới Lên Kệ
+                <span class="absolute -bottom-3 left-1/4 w-1/2 h-1.5 bg-pink-400 rounded-full"></span>
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div th:if="${#lists.isEmpty(newProducts)}" class="col-span-full text-center py-10 text-pink-300">
+                <i class="fa-solid fa-box-open text-5xl mb-3"></i>
+                <p class="text-gray-500 mt-2">Đang cập nhật đồ xinh cho bé...</p>
+            </div>
+
+            <div th:each="product : ${newProducts}" class="group relative flex flex-col bg-white border-2 border-transparent hover:border-pink-200 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+
+                <div th:if="${product.isBestSeller}" class="absolute top-3 left-3 bg-red-500 text-white text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full z-10 shadow-sm flex items-center">
+                    <i class="fa-solid fa-star mr-1 text-yellow-300 text-[10px]"></i> HOT
+                </div>
+
+                <a th:href="@{/product/{id}(id=${product.id})}" class="block relative aspect-square bg-pink-50 overflow-hidden flex items-center justify-center p-6">
+                    <img th:if="${product.image != null and !product.image.isEmpty()}" th:src="${product.image}" class="object-cover w-full h-full group-hover:scale-110 transition duration-700" alt="Sản phẩm">
+                    <i th:unless="${product.image != null and !product.image.isEmpty()}" class="fa-solid fa-shirt text-7xl text-pink-200 group-hover:scale-110 transition duration-500"></i>
+
+                    <div class="absolute inset-0 bg-pink-900 bg-opacity-10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button class="bg-white text-pink-600 font-bold py-2 px-6 rounded-full shadow-lg hover:bg-pink-500 hover:text-white transition transform translate-y-4 group-hover:translate-y-0">
+                            Xem Chi Tiết
+                        </button>
+                    </div>
+                </a>
+
+                <div class="p-5 text-center flex-grow flex flex-col justify-between bg-white">
+                    <a th:href="@{/product/{id}(id=${product.id})}" class="text-sm font-bold text-gray-700 hover:text-pink-600 line-clamp-2 mb-2 transition" th:text="${product.name}">Tên SP</a>
+                    <div class="text-pink-600 font-extrabold text-lg mt-auto" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">Giá</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-pink-50 border-t border-pink-200 pt-12 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-gray-700">
+        <div>
+            <a th:href="@{/}" class="text-2xl font-extrabold text-pink-600 flex items-center gap-2 mb-4 drop-shadow-sm">
+                <i class="fa-solid fa-face-smile-wink text-pink-500"></i> KidClothing
+            </a>
+            <p class="mb-2 font-medium"><i class="fa-solid fa-location-dot mr-2 text-pink-500"></i> Trường Đại học Văn Lang</p>
+            <p class="mb-2 font-medium"><i class="fa-solid fa-phone mr-2 text-pink-500"></i> Hotline: 0123.456.789</p>
+        </div>
+
+        <div>
+            <h3 class="font-bold text-pink-700 uppercase mb-4 tracking-wider">Hỗ trợ ba mẹ</h3>
+            <ul class="space-y-3 font-medium">
+                <li><a href="#" class="hover:text-pink-600 transition">Chính sách đổi trả</a></li>
+                <li><a href="#" class="hover:text-pink-600 transition">Hướng dẫn chọn size cho bé</a></li>
+                <li><a href="#" class="hover:text-pink-600 transition">Chính sách giao hàng</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="font-bold text-pink-700 uppercase mb-4 tracking-wider">Kết nối với KidClothing</h3>
+            <div class="flex space-x-4">
+                <a href="#" class="bg-white w-10 h-10 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white shadow-sm transition"><i class="fa-brands fa-facebook-f text-lg"></i></a>
+                <a href="#" class="bg-white w-10 h-10 rounded-full flex items-center justify-center text-pink-600 hover:bg-pink-600 hover:text-white shadow-sm transition"><i class="fa-brands fa-instagram text-lg"></i></a>
+                <a href="#" class="bg-white w-10 h-10 rounded-full flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white shadow-sm transition"><i class="fa-brands fa-youtube text-lg"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-10 text-pink-500 font-medium border-t border-pink-200 pt-6">
+        &copy; 2026 Đồ án Lập trình Java Nâng cao - Đại học Văn Lang
+    </div>
+</footer>
+</body>
+</html>

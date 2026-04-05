@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${product.name} + ' - KidClothing'">Chi Tiết Sản Phẩm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+<nav class="bg-blue-600 shadow-lg p-4 text-white text-center font-bold text-xl">
+    <a th:href="@{/}"><i class="fa-solid fa-arrow-left mr-2"></i> Trở về Trang chủ</a>
+</nav>
+
+<main class="flex-grow container mx-auto px-4 mt-10 mb-12">
+    <div class="bg-white rounded-xl shadow-lg p-8 max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
+        <div class="md:w-1/2 bg-gray-100 rounded-lg flex items-center justify-center min-h-[400px]">
+            <i class="fa-solid fa-image text-6xl text-gray-400"></i>
+        </div>
+
+        <div class="md:w-1/2 flex flex-col justify-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4" th:text="${product.name}">Tên sản phẩm</h1>
+            <p class="text-red-600 text-3xl font-extrabold mb-6" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Giá</p>
+
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-bold mb-2">Mô tả chi tiết:</h3>
+                <p class="text-gray-600 leading-relaxed" th:text="${product.description}">Mô tả sản phẩm sẽ hiển thị ở đây...</p>
+            </div>
+
+            <div class="mt-auto">
+                <a th:href="@{/cart/add/{id}(id=${product.id})}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg text-lg shadow-lg transition transform hover:-translate-y-1">
+                    <i class="fa-solid fa-cart-plus mr-2"></i> THÊM VÀO GIỎ HÀNG
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

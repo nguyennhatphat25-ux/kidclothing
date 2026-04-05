@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div th:fragment="sidebar(active)" class="w-64 bg-slate-800 min-h-screen text-white p-6 flex flex-col shadow-xl z-10">
+    <h2 class="text-2xl font-bold mb-10 text-blue-400 text-center tracking-wider">KidClothing</h2>
+    <nav class="space-y-4 flex-1">
+        <a th:href="@{/admin/dashboard}"
+           th:class="${active == 'dashboard' ? 'bg-blue-600 shadow' : 'hover:bg-slate-700'} + ' block p-3 rounded transition'">
+            <i class="fa-solid fa-chart-pie mr-2"></i>Thống Kê
+        </a>
+        <a th:href="@{/admin/products}"
+           th:class="${active == 'products' ? 'bg-blue-600 shadow' : 'hover:bg-slate-700'} + ' block p-3 rounded transition'">
+            <i class="fa-solid fa-shirt mr-2"></i>Sản Phẩm
+        </a>
+        <a th:href="@{/admin/orders}"
+           th:class="${active == 'orders' ? 'bg-blue-600 shadow' : 'hover:bg-slate-700'} + ' block p-3 rounded transition'">
+            <i class="fa-solid fa-cart-check mr-2"></i>Đơn Hàng
+        </a>
+        <a th:href="@{/admin/categories}"
+           th:class="${active == 'categories' ? 'bg-blue-600 shadow' : 'hover:bg-slate-700'} + ' block p-3 rounded transition'">
+            <i class="fa-solid fa-list mr-2"></i>Danh Mục
+        </a>
+
+        <a th:href="@{/admin/coupons}"
+           th:class="${active == 'coupons' ? 'bg-green-600 shadow' : 'hover:bg-slate-700'} + ' block p-3 rounded transition text-green-400'">
+            <i class="fa-solid fa-ticket mr-2"></i>Mã Giảm Giá
+        </a>
+
+        <div class="pt-6 mt-6 border-t border-slate-700">
+            <a th:href="@{/}" class="block p-3 hover:bg-slate-700 rounded text-yellow-400 transition font-bold"><i class="fa-solid fa-house mr-2"></i>Ra Cửa Hàng</a>
+        </div>
+    </nav>
+</div>
+</body>
+</html>
