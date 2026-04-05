@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50 font-sans p-8 flex items-center justify-center min-h-screen">
-<div class="w-full max-w-2xl mx-auto bg-white p-10 rounded-3xl shadow-xl border border-pink-100">
+<div class="w-full max-w-3xl mx-auto bg-white p-10 rounded-3xl shadow-xl border border-pink-100">
     <h2 class="text-3xl font-black mb-8 text-gray-800 uppercase tracking-tight border-b border-pink-100 pb-4">
         <i class="fa-solid fa-box-open text-pink-500 mr-2"></i>Thông tin Sản phẩm
     </h2>
 
-    <form th:action="@{/admin/products/save}" th:object="${product}" method="post" class="space-y-6">
+    <form th:action="@{/admin/products/save}" th:object="${product}" method="post" enctype="multipart/form-data" class="space-y-6">
         <input type="hidden" th:field="*{id}">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -22,9 +22,9 @@
 
             <div>
                 <label class="block font-bold text-gray-700 mb-2 uppercase text-xs tracking-wider">Thuộc Danh mục</label>
-                <select th:field="*{category}" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-pink-500 outline-none transition font-medium" required>
+                <select name="category" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-pink-500 outline-none transition font-medium" required>
                     <option value="">-- Chọn danh mục --</option>
-                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}" th:selected="${product.category?.id == cat.id}"></option>
                 </select>
             </div>
 
@@ -38,9 +38,23 @@
                 <input type="number" th:field="*{stockQuantity}" class="w-full border-2 border-pink-200 bg-pink-50 rounded-xl p-3 focus:border-pink-500 outline-none transition font-black text-pink-700 text-lg" required min="0">
             </div>
 
-            <div class="md:col-span-2">
-                <label class="block font-bold text-gray-700 mb-2 uppercase text-xs tracking-wider">Link ảnh sản phẩm (URL)</label>
-                <input type="text" th:field="*{image}" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-pink-500 outline-none transition" placeholder="Ví dụ: https://...">
+            <div class="md:col-span-2 bg-pink-50 p-5 rounded-xl border border-pink-200 shadow-inner">
+                <label class="block font-bold text-pink-800 mb-3 uppercase text-xs tracking-wider">Hình ảnh sản phẩm (Chọn 1 trong 2 cách)</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <span class="text-xs text-pink-600 font-bold block mb-2"><i class="fa-solid fa-upload mr-1"></i> CÁCH 1: Upload từ máy tính</span>
+                        <input type="file" name="imageFile" accept="image/*" class="w-full bg-white border-2 border-pink-100 rounded-xl p-2 text-sm focus:border-pink-500 outline-none transition cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-100 file:text-pink-700 hover:file:bg-pink-200">
+                    </div>
+                    <div>
+                        <span class="text-xs text-pink-600 font-bold block mb-2"><i class="fa-solid fa-link mr-1"></i> CÁCH 2: Dán Link URL ảnh</span>
+                        <input type="text" th:field="*{image}" class="w-full border-2 border-pink-100 rounded-xl p-2 text-sm h-10 focus:border-pink-500 outline-none transition" placeholder="Ví dụ: https://picsum.photos/500">
+                    </div>
+                </div>
+
+                <div th:if="${product.image != null and !product.image.isEmpty()}" class="mt-5 pt-4 border-t border-pink-200 flex items-center gap-4">
+                    <span class="text-xs font-bold text-gray-500 uppercase">Ảnh hiện tại:</span>
+                    <img th:src="${product.image}" class="w-20 h-20 object-cover rounded-xl border-2 border-white shadow-md">
+                </div>
             </div>
 
             <div class="md:col-span-2">
