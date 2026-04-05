@@ -3,35 +3,44 @@
 <head>
 </head>
 <body>
-<div th:fragment="sidebar(active)" class="w-64 bg-slate-800 min-h-screen text-white p-6 flex flex-col shadow-xl z-10">
-    <h2 class="text-2xl font-bold mb-10 text-blue-400 text-center tracking-wider">KidClothing</h2>
-    <nav class="space-y-4 flex-1">
+<div th:fragment="sidebar(active)" class="w-64 bg-pink-950 min-h-screen text-white p-8 flex flex-col shadow-2xl z-10 sticky top-0 left-0">
+
+    <div class="text-center mb-12 border-b border-pink-800 pb-6">
+        <h2 class="text-2xl font-black text-pink-200 tracking-widest uppercase">Admin</h2>
+        <p class="text-pink-400 text-xs mt-1">KidClothing System</p>
+    </div>
+
+    <nav class="space-y-3 font-semibold text-sm tracking-wide">
         <a th:href="@{/admin/dashboard}"
-           th:class="${active == 'dashboard' ? 'bg-blue-600 shadow' : 'hover:bg-slate-700'} + ' block p-3 rounded transition'">
-            <i class="fa-solid fa-chart-pie mr-2"></i>Thống Kê
+           th:class="${active == 'dashboard' ? 'bg-pink-600 shadow-md text-white' : 'text-pink-200 hover:bg-pink-800'} + ' block p-4 rounded-xl transition'">
+            THỐNG KÊ
         </a>
         <a th:href="@{/admin/products}"
-           th:class="${active == 'products' ? 'bg-blue-600 shadow' : 'hover:bg-slate-700'} + ' block p-3 rounded transition'">
-            <i class="fa-solid fa-shirt mr-2"></i>Sản Phẩm
+           th:class="${active == 'products' ? 'bg-pink-600 shadow-md text-white' : 'text-pink-200 hover:bg-pink-800'} + ' block p-4 rounded-xl transition'">
+            SẢN PHẨM
         </a>
         <a th:href="@{/admin/orders}"
-           th:class="${active == 'orders' ? 'bg-blue-600 shadow' : 'hover:bg-slate-700'} + ' block p-3 rounded transition'">
-            <i class="fa-solid fa-cart-check mr-2"></i>Đơn Hàng
+           th:class="${active == 'orders' ? 'bg-pink-600 shadow-md text-white' : 'text-pink-200 hover:bg-pink-800'} + ' block p-4 rounded-xl transition'">
+            ĐƠN HÀNG
         </a>
         <a th:href="@{/admin/categories}"
-           th:class="${active == 'categories' ? 'bg-blue-600 shadow' : 'hover:bg-slate-700'} + ' block p-3 rounded transition'">
-            <i class="fa-solid fa-list mr-2"></i>Danh Mục
+           th:class="${active == 'categories' ? 'bg-pink-600 shadow-md text-white' : 'text-pink-200 hover:bg-pink-800'} + ' block p-4 rounded-xl transition'">
+            DANH MỤC
         </a>
-
         <a th:href="@{/admin/coupons}"
-           th:class="${active == 'coupons' ? 'bg-green-600 shadow' : 'hover:bg-slate-700'} + ' block p-3 rounded transition text-green-400'">
-            <i class="fa-solid fa-ticket mr-2"></i>Mã Giảm Giá
+           th:class="${active == 'coupons' ? 'bg-rose-500 shadow-md text-white' : 'text-rose-300 hover:bg-pink-800'} + ' block p-4 rounded-xl transition'">
+            MÃ GIẢM GIÁ
         </a>
-
-        <div class="pt-6 mt-6 border-t border-slate-700">
-            <a th:href="@{/}" class="block p-3 hover:bg-slate-700 rounded text-yellow-400 transition font-bold"><i class="fa-solid fa-house mr-2"></i>Ra Cửa Hàng</a>
-        </div>
     </nav>
+
+    <div class="pt-6 mt-auto border-t border-pink-800 pb-4">
+        <a th:href="@{/logout}" class="block p-4 bg-gray-900 hover:bg-black rounded-xl text-white text-center transition font-bold uppercase text-xs">
+            Đăng Xuất
+        </a>
+        <a th:href="@{/}" class="block p-4 text-center hover:text-pink-300 text-pink-400 transition font-bold uppercase text-xs mt-2 underline">
+            Ra Cửa Hàng
+        </a>
+    </div>
 </div>
 </body>
 </html>

@@ -9,41 +9,47 @@
 <div class="flex min-h-screen">
     <div th:replace="~{admin/fragments :: sidebar('products')}"></div>
 
-    <main class="flex-1 p-10 bg-gray-100">
+    <main class="flex-1 p-10 bg-gray-100 overflow-y-auto h-screen">
         <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
             <div class="flex justify-between items-center mb-8 border-b pb-4">
                 <h2 class="text-2xl font-bold text-gray-800 uppercase tracking-tight">
-                    <i class="fa-solid fa-shirt text-blue-600 mr-2"></i>Quản lý Quần Áo Bé Trai & Bé Gái
+                    <i class="fa-solid fa-shirt text-pink-600 mr-2"></i>Quản lý Quần Áo
                 </h2>
-                <a th:href="@{/admin/products/add}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition">
+                <a th:href="@{/admin/products/add}" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2.5 px-5 rounded-lg shadow-md transition">
                     <i class="fa-solid fa-plus mr-2"></i> Thêm Sản Phẩm Mới
                 </a>
             </div>
 
             <table class="w-full text-left border-separate border-spacing-y-2">
                 <thead>
-                <tr class="bg-gray-50 text-gray-600 uppercase text-xs font-bold tracking-wider">
-                    <th class="px-4 py-2 border-b">Ảnh</th>
-                    <th class="px-4 py-2 border-b">Tên Quần Áo</th>
-                    <th class="px-4 py-2 border-b">Danh Mục</th>
-                    <th class="px-4 py-2 border-b text-right">Giá VNĐ</th>
-                    <th class="px-4 py-2 border-b text-center">BestSeller</th>
-                    <th class="px-4 py-2 border-b text-center">Thao tác</th>
+                <tr class="bg-pink-50 text-pink-800 uppercase text-xs font-bold tracking-wider">
+                    <th class="px-4 py-3 border-b rounded-tl-lg">Ảnh</th>
+                    <th class="px-4 py-3 border-b">Tên Quần Áo</th>
+                    <th class="px-4 py-3 border-b">Danh Mục</th>
+                    <th class="px-4 py-3 border-b text-center">Tồn kho</th>
+                    <th class="px-4 py-3 border-b text-right">Giá VNĐ</th>
+                    <th class="px-4 py-3 border-b text-center">BestSeller</th>
+                    <th class="px-4 py-3 border-b text-center rounded-tr-lg">Thao tác</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${#lists.isEmpty(products)}"><td colspan="6" class="p-8 text-center text-gray-400">Chưa có sản phẩm.</td></tr>
-                <tr th:each="p : ${products}" class="bg-gray-50 hover:bg-blue-50 transition shadow-sm rounded-lg">
-                    <td class="px-4 py-4 rounded-l-lg border"><img th:if="${p.image}" th:src="${p.image}" class="w-16 h-16 rounded object-cover shadow"></td>
-                    <td class="px-4 py-4 border font-medium text-gray-900" th:text="${p.name}"></td>
-                    <td class="px-4 py-4 border text-sm" th:text="${p.category.name}"></td>
-                    <td class="px-4 py-4 border text-right font-extrabold text-red-600 text-lg" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
-                    <td class="px-4 py-4 border text-center text-yellow-500 text-xl">
-                        <i th:if="${p.isBestSeller}" class="fa-solid fa-star shadow-yellow-200 shadow-xl"></i>
+                <tr th:if="${#lists.isEmpty(products)}"><td colspan="7" class="p-8 text-center text-gray-400">Chưa có sản phẩm.</td></tr>
+                <tr th:each="p : ${products}" class="bg-white border hover:bg-pink-50 border-gray-100 transition shadow-sm rounded-lg group">
+                    <td class="px-4 py-4 rounded-l-lg border-y border-l"><img th:if="${p.image}" th:src="${p.image}" class="w-16 h-16 rounded object-cover shadow-sm"></td>
+                    <td class="px-4 py-4 border-y font-medium text-gray-900 group-hover:text-pink-600 transition" th:text="${p.name}"></td>
+                    <td class="px-4 py-4 border-y text-sm text-gray-500 font-bold" th:text="${p.category.name}"></td>
+
+                    <td class="px-4 py-4 border-y text-center">
+                        <span th:class="${p.stockQuantity > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} + ' px-3 py-1 rounded-full text-xs font-bold'" th:text="${p.stockQuantity}"></span>
                     </td>
-                    <td class="px-4 py-4 rounded-r-lg border text-center flex items-center justify-center gap-2">
-                        <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="text-blue-500 hover:bg-blue-100 p-2 rounded transition"><i class="fa-solid fa-edit"></i> Sửa</a>
-                        <a th:href="@{/admin/products/delete/{id}(id=${p.id})}" class="text-red-400 hover:bg-red-50 p-2 rounded transition" onclick="return confirm('Bạn có chắc?');"><i class="fa-solid fa-trash"></i> Xóa</a>
+
+                    <td class="px-4 py-4 border-y text-right font-black text-rose-600 text-lg" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                    <td class="px-4 py-4 border-y text-center text-yellow-400 text-xl">
+                        <i th:if="${p.isBestSeller}" class="fa-solid fa-star drop-shadow-sm"></i>
+                    </td>
+                    <td class="px-4 py-4 rounded-r-lg border-y border-r text-center flex items-center justify-center gap-2 mt-3">
+                        <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="text-blue-500 hover:bg-blue-100 p-2 rounded transition font-bold text-xs"><i class="fa-solid fa-edit"></i> Sửa</a>
+                        <a th:href="@{/admin/products/delete/{id}(id=${p.id})}" class="text-red-500 hover:bg-red-50 p-2 rounded transition font-bold text-xs" onclick="return confirm('Bạn có chắc?');"><i class="fa-solid fa-trash"></i> Xóa</a>
                     </td>
                 </tr>
                 </tbody>

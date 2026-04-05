@@ -20,7 +20,7 @@ public class CartController {
     @Autowired private CartService cartService;
     @Autowired private ProductService productService;
     @Autowired private OrderService orderService;
-    @Autowired private CouponService couponService; // Thêm CouponService
+    @Autowired private CouponService couponService;
 
     @GetMapping
     public String viewCart(Model model) {
@@ -58,11 +58,9 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    // Xử lý áp dụng mã giảm giá
     @PostMapping("/apply-coupon")
     public String applyCoupon(@RequestParam("code") String code, Model model) {
         Coupon coupon = couponService.getByCode(code);
-        // Kiểm tra mã tồn tại và còn hạn
         if (coupon != null && (coupon.getExpiryDate() == null || !coupon.getExpiryDate().isBefore(java.time.LocalDate.now()))) {
             cartService.applyDiscount(coupon.getDiscountAmount());
         }
@@ -73,7 +71,10 @@ public class CartController {
     public String checkout(Model model) {
         if (cartService.getCartItems().isEmpty()) { return "redirect:/cart"; }
         Order newOrder = orderService.placeOrder();
-        model.addAttribute("orderId", newOrder.getId());
+
+        // TRUYỀN CẢ ĐỐI TƯỢNG ORDER RA ĐỂ LẤY NGÀY GIỜ VÀ THÔNG TIN KHÁCH
+        model.addAttribute("order", newOrder);
+
         return "user/checkout-success";
     }
 }

@@ -13,46 +13,44 @@
         <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
             <div class="flex justify-between items-center mb-8 border-b pb-4">
                 <h2 class="text-2xl font-bold text-gray-800 uppercase tracking-tight">
-                    <i class="fa-solid fa-clipboard-list mr-2 text-blue-600"></i> Danh Sách Đơn Đặt Hàng
+                    <i class="fa-solid fa-clipboard-list mr-2 text-pink-600"></i> Danh Sách Đơn Đặt Hàng
                 </h2>
             </div>
 
             <table class="w-full text-left border-separate border-spacing-y-2">
                 <thead>
-                <tr class="bg-gray-50 text-gray-600 uppercase text-xs font-bold tracking-wider">
-                    <th class="px-4 py-2 border-b rounded-tl-lg">Mã Đơn</th>
-                    <th class="px-4 py-2 border-b">Ngày Đặt</th>
-                    <th class="px-4 py-2 border-b">Khách Hàng</th>
-                    <th class="px-4 py-2 border-b text-right">Tổng Tiền VNĐ</th>
-                    <th class="px-4 py-2 border-b text-center">Trạng Thái</th>
-                    <th class="px-4 py-2 border-b text-center rounded-tr-lg">Cập Nhật</th>
+                <tr class="bg-pink-50 text-pink-800 uppercase text-xs font-bold tracking-wider">
+                    <th class="px-4 py-3 border-b border-pink-100 rounded-tl-lg">Mã Đơn</th>
+                    <th class="px-4 py-3 border-b border-pink-100">Ngày Đặt</th>
+                    <th class="px-4 py-3 border-b border-pink-100">Khách Hàng</th>
+                    <th class="px-4 py-3 border-b border-pink-100 text-right">Tổng Tiền VNĐ</th>
+                    <th class="px-4 py-3 border-b border-pink-100 text-center">Trạng Thái</th>
+                    <th class="px-4 py-3 border-b border-pink-100 text-center rounded-tr-lg">Cập Nhật</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:if="${#lists.isEmpty(orders)}"><td colspan="6" class="p-8 text-center text-gray-400">Chưa có đơn hàng nào được đặt.</td></tr>
-                <tr th:each="o : ${orders}" class="bg-gray-50 hover:bg-blue-50 transition shadow-sm rounded-lg">
-                    <td class="px-4 py-4 rounded-l-lg border font-black text-gray-800" th:text="'#' + ${o.id}"></td>
-                    <td class="px-4 py-4 border text-gray-600" th:text="${#temporals.format(o.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-                    <td class="px-4 py-4 border">
-                        <span th:if="${o.user}" th:text="${o.user.fullName}" class="font-medium"></span>
-                        <span th:unless="${o.user}" class="text-gray-500 italic">Khách vãng lai</span>
+                <tr th:each="o : ${orders}" class="bg-white border border-gray-100 hover:border-pink-200 transition shadow-sm rounded-lg group">
+                    <td class="px-4 py-4 rounded-l-lg border-y border-l font-black text-gray-800 group-hover:text-pink-600" th:text="'#' + ${o.id}"></td>
+                    <td class="px-4 py-4 border-y text-gray-600 font-medium" th:text="${o.createdAt != null ? #temporals.format(o.createdAt, 'dd/MM/yyyy HH:mm') : 'N/A'}"></td>
+                    <td class="px-4 py-4 border-y">
+                        <span th:if="${o.user != null}" th:text="${o.user.fullName}" class="font-bold text-pink-600"></span>
+                        <span th:unless="${o.user != null}" class="text-gray-500 italic font-medium">Khách vãng lai</span>
                     </td>
-                    <td class="px-4 py-4 border text-right font-bold text-red-600 text-lg" th:text="${#numbers.formatDecimal(o.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
-                    <td class="px-4 py-4 border text-center">
-                                <span th:text="${o.status}"
-                                      th:class="${o.status == 'DELIVERED' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'} + ' px-3 py-1 rounded-full text-xs font-bold uppercase'">
-                                </span>
+                    <td class="px-4 py-4 border-y text-right font-black text-rose-500 text-lg" th:text="${#numbers.formatDecimal(o.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                    <td class="px-4 py-4 border-y text-center">
+                        <span th:text="${o.status}" th:class="${o.status == 'DELIVERED' ? 'bg-green-100 text-green-700' : (o.status == 'CANCELLED' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700')} + ' px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider'"></span>
                     </td>
-                    <td class="px-4 py-4 rounded-r-lg border text-center">
+                    <td class="px-4 py-4 rounded-r-lg border-y border-r text-center">
                         <form th:action="@{/admin/orders/update-status}" method="post" class="inline-flex gap-2 items-center">
                             <input type="hidden" name="orderId" th:value="${o.id}">
-                            <select name="status" class="text-xs border rounded p-1 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <select name="status" class="text-xs border border-gray-200 rounded p-1.5 shadow-sm focus:outline-none focus:border-pink-500 font-medium text-gray-700">
                                 <option value="PENDING" th:selected="${o.status == 'PENDING'}">Chờ xử lý</option>
                                 <option value="SHIPPING" th:selected="${o.status == 'SHIPPING'}">Đang giao</option>
                                 <option value="DELIVERED" th:selected="${o.status == 'DELIVERED'}">Hoàn thành</option>
                                 <option value="CANCELLED" th:selected="${o.status == 'CANCELLED'}">Đã hủy</option>
                             </select>
-                            <button type="submit" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-1 px-3 rounded text-xs transition shadow-sm"><i class="fa-solid fa-floppy-disk"></i></button>
+                            <button type="submit" class="bg-pink-100 hover:bg-pink-500 text-pink-600 hover:text-white p-1.5 px-3 rounded text-xs transition shadow-sm font-bold"><i class="fa-solid fa-floppy-disk"></i></button>
                         </form>
                     </td>
                 </tr>

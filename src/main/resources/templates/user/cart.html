@@ -5,39 +5,51 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-white font-sans text-gray-800 flex flex-col min-h-screen">
+<body class="bg-white font-sans text-gray-800 flex flex-col min-h-screen m-0 p-0">
 
-<header class="bg-pink-500 text-white p-4 shadow-lg">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <a th:href="@{/}" class="text-2xl font-bold italic">KidClothing</a>
+<header class="bg-pink-500 text-white p-4 shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8">
+        <a th:href="@{/}" class="text-2xl font-extrabold flex items-center gap-2 hover:text-pink-100 transition">
+            <i class="fa-solid fa-face-smile-wink"></i> KidClothing
+        </a>
         <span class="font-bold uppercase tracking-widest text-sm">Giỏ hàng của bé</span>
     </div>
 </header>
 
-<main class="flex-grow max-w-7xl mx-auto px-4 py-10 w-full">
-    <h2 class="text-3xl font-black text-gray-800 mb-8 border-l-8 border-pink-500 pl-4">GIỎ HÀNG</h2>
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+    <div class="mb-6">
+        <a th:href="@{/}" class="inline-flex items-center gap-2 text-pink-500 hover:text-pink-700 font-bold transition group text-lg">
+            <i class="fa-solid fa-arrow-left-long transform group-hover:-translate-x-1 transition"></i>
+            Tiếp tục mua sắm
+        </a>
+    </div>
 
-    <div th:if="${#lists.isEmpty(cartItems)}" class="text-center py-20 bg-pink-50 rounded-3xl">
+    <h2 class="text-3xl font-black text-gray-800 mb-8 border-l-8 border-pink-500 pl-4 uppercase">Giỏ Hàng</h2>
+
+    <div th:if="${#lists.isEmpty(cartItems)}" class="text-center py-20 bg-pink-50 rounded-3xl border border-pink-100">
         <i class="fa-solid fa-cart-shopping text-6xl text-pink-200 mb-4"></i>
-        <p class="text-xl text-gray-500">Chưa có đồ xinh nào trong giỏ hết ba mẹ ơi!</p>
-        <a th:href="@{/}" class="mt-6 inline-block bg-pink-500 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-pink-600 transition">MUA SẮM NGAY</a>
+        <p class="text-xl text-gray-500 font-medium">Chưa có đồ xinh nào trong giỏ hết ba mẹ ơi!</p>
+        <a th:href="@{/}" class="mt-6 inline-block bg-pink-500 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-pink-600 transition transform hover:-translate-y-1">MUA SẮM NGAY</a>
     </div>
 
     <div th:unless="${#lists.isEmpty(cartItems)}" class="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div class="lg:col-span-2 space-y-4">
             <div th:each="item : ${cartItems}" class="flex items-center bg-white p-4 rounded-3xl border border-pink-100 shadow-sm hover:shadow-md transition">
-                <img th:src="${item.image}" class="w-24 h-24 object-cover rounded-2xl mr-6 border border-pink-50">
+                <img th:if="${item.image != null and !item.image.isEmpty()}" th:src="${item.image}" class="w-24 h-24 object-cover rounded-2xl mr-6 border border-pink-50">
+                <i th:unless="${item.image != null and !item.image.isEmpty()}" class="fa-solid fa-image text-4xl text-pink-200 w-24 h-24 flex items-center justify-center bg-pink-50 rounded-2xl mr-6"></i>
+
                 <div class="flex-grow">
-                    <h4 class="font-bold text-gray-800" th:text="${item.name}">Tên SP</h4>
+                    <h4 class="font-bold text-gray-800 text-lg" th:text="${item.name}">Tên SP</h4>
                     <p class="text-pink-600 font-black mt-1" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
                 </div>
+
                 <div class="flex items-center gap-4">
                     <form th:action="@{/cart/update}" method="post" class="flex items-center border border-pink-200 rounded-full px-2">
                         <input type="hidden" name="productId" th:value="${item.productId}">
-                        <input type="number" name="quantity" th:value="${item.quantity}" class="w-12 text-center font-bold outline-none py-1" min="1">
-                        <button type="submit" class="text-pink-500 p-1"><i class="fa-solid fa-rotate"></i></button>
+                        <input type="number" name="quantity" th:value="${item.quantity}" class="w-12 text-center font-bold outline-none py-1 text-gray-700" min="1">
+                        <button type="submit" class="text-pink-500 p-2 hover:text-pink-700 transition"><i class="fa-solid fa-rotate"></i></button>
                     </form>
-                    <a th:href="@{/cart/remove/{id}(id=${item.productId})}" class="text-gray-300 hover:text-red-500 transition text-xl"><i class="fa-solid fa-trash-can"></i></a>
+                    <a th:href="@{/cart/remove/{id}(id=${item.productId})}" class="text-gray-300 hover:text-red-500 transition text-2xl p-2"><i class="fa-solid fa-trash-can"></i></a>
                 </div>
             </div>
         </div>
@@ -54,7 +66,7 @@
             </form>
 
             <div class="space-y-3 mb-8">
-                <div class="flex justify-between text-gray-600"><span>Tạm tính:</span><span th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span></div>
+                <div class="flex justify-between text-gray-600 font-medium"><span>Tạm tính:</span><span th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span></div>
                 <div class="flex justify-between text-rose-500 font-bold"><span>Giảm giá:</span><span th:text="'- ' + ${#numbers.formatDecimal(discountAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span></div>
                 <div class="flex justify-between items-center pt-4 border-t border-pink-200 text-2xl font-black text-pink-600">
                     <span>TỔNG:</span>
@@ -68,5 +80,8 @@
         </div>
     </div>
 </main>
+
+<div th:replace="~{user/fragments :: footer}"></div>
+
 </body>
 </html>

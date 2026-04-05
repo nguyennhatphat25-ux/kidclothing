@@ -1,20 +1,101 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Đặt Hàng Thành Công</title>
+    <title>Đặt Hàng Thành Công - KidClothing</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-<div class="bg-white p-10 rounded-xl shadow-2xl text-center max-w-lg">
-    <i class="fa-solid fa-circle-check text-green-500 text-7xl mb-4"></i>
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">Đặt Hàng Thành Công!</h1>
-    <p class="text-gray-600 mb-6">Mã đơn hàng của bạn là: <strong class="text-blue-600">#<span th:text="${orderId}"></span></strong></p>
-    <p class="text-gray-600 mb-8">Chúng tôi sẽ sớm liên hệ để giao quần áo cho bé yêu của bạn.</p>
+<body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen m-0 p-0">
 
-    <a th:href="@{/}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition">
-        <i class="fa-solid fa-house mr-2"></i> Trở Về Trang Chủ
-    </a>
+<div class="bg-pink-500 text-white text-sm text-center py-2 font-medium tracking-wide w-full m-0">
+    <i class="fa-solid fa-gift mr-2"></i> Miễn phí giao hàng toàn quốc cho đơn từ 500.000Đ
 </div>
+
+<header class="bg-white border-b border-pink-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
+        <a th:href="@{/}" class="text-3xl font-extrabold text-pink-600 flex items-center gap-2 hover:text-pink-700 transition">
+            <i class="fa-solid fa-face-smile-wink text-pink-500 mr-1"></i> KidClothing
+        </a>
+
+        <form th:action="@{/search}" method="get" class="flex-1 max-w-xl mx-8 relative">
+            <input type="text" name="keyword" class="w-full border-2 border-pink-200 rounded-full pl-5 pr-12 py-2.5 focus:outline-none focus:border-pink-500 transition shadow-sm text-gray-700" placeholder="Ba mẹ muốn tìm đồ gì cho bé yêu?">
+            <button type="submit" class="absolute right-4 top-3 text-pink-400 hover:text-pink-600 transition"><i class="fa-solid fa-magnifying-glass text-lg"></i></button>
+        </form>
+
+        <div class="flex items-center space-x-6">
+            <div sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}" class="text-gray-500 hover:text-pink-600 flex flex-col items-center transition">
+                    <i class="fa-regular fa-user text-xl mb-1"></i>
+                    <span class="text-xs font-semibold">Đăng nhập</span>
+                </a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <a th:href="@{/profile}" class="text-pink-600 hover:text-pink-800 flex flex-col items-center transition">
+                    <i class="fa-solid fa-circle-user text-xl mb-1"></i>
+                    <span class="text-xs font-bold" th:text="${currentUser.fullName}">User</span>
+                </a>
+            </div>
+            <a th:href="@{/cart}" class="text-gray-500 hover:text-pink-600 flex flex-col items-center transition relative">
+                <div class="relative">
+                    <i class="fa-solid fa-bag-shopping text-2xl mb-1"></i>
+                    <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow border border-white">Giỏ</span>
+                </div>
+                <span class="text-xs font-semibold">Giỏ hàng</span>
+            </a>
+        </div>
+    </div>
+
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ul class="flex justify-center space-x-8 font-bold text-gray-600 py-3 text-sm uppercase tracking-wider overflow-x-auto">
+            <li><a th:href="@{/}" class="text-pink-600 border-b-2 border-pink-600 pb-1 whitespace-nowrap">Trang Chủ</a></li>
+            <li th:each="cat : ${menuCategories}">
+                <a th:href="@{/category/{id}(id=${cat.id})}" class="hover:text-pink-500 transition whitespace-nowrap" th:text="${cat.name}">Danh mục</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main class="flex-grow flex items-center justify-center p-5 py-12">
+    <div class="bg-white p-10 rounded-3xl shadow-xl w-full max-w-2xl border border-pink-100 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-3 bg-pink-500"></div>
+
+        <div class="text-center mb-8 mt-4">
+            <i class="fa-solid fa-circle-check text-pink-500 text-6xl mb-4"></i>
+            <h1 class="text-3xl font-black text-gray-800 uppercase tracking-tight">Đặt Hàng Thành Công!</h1>
+            <p class="text-gray-500 mt-2">Cảm ơn ba mẹ đã mua sắm tại KidClothing</p>
+        </div>
+
+        <div class="bg-pink-50 rounded-2xl p-6 mb-8 border border-pink-100">
+            <h3 class="font-bold text-pink-800 border-b border-pink-200 pb-3 mb-4 uppercase tracking-wider text-sm">Thông tin đơn hàng</h3>
+            <div class="space-y-3 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Mã đơn hàng:</span>
+                    <span class="font-bold text-gray-800" th:text="'#' + ${order.id}">#123</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Ngày đặt hàng:</span>
+                    <span class="font-bold text-gray-800" th:text="${order.createdAt != null ? #temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm') : ''}"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Khách hàng:</span>
+                    <span class="font-bold text-pink-600" th:if="${order.user != null}" th:text="${order.user.fullName}">Tên Khách</span>
+                    <span class="font-bold text-gray-600 italic" th:unless="${order.user != null}">Khách vãng lai</span>
+                </div>
+                <div class="flex justify-between pt-3 border-t border-pink-200 mt-3">
+                    <span class="text-gray-500 font-bold uppercase">Tổng thanh toán:</span>
+                    <span class="font-black text-rose-600 text-lg" th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a th:href="@{/}" class="inline-block bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-10 rounded-full shadow-md transition transform hover:-translate-y-1">
+                TIẾP TỤC MUA SẮM
+            </a>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{user/fragments :: footer}"></div>
 </body>
 </html>

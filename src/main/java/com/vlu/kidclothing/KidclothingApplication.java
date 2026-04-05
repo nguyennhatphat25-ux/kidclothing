@@ -29,7 +29,6 @@ public class KidclothingApplication {
 									  ProductRepository productRepository,
 									  PasswordEncoder passwordEncoder) {
 		return args -> {
-			// Khởi tạo Admin
 			if (userRepository.findByUsername("admin").isEmpty()) {
 				User admin = new User();
 				admin.setUsername("admin");
@@ -42,36 +41,30 @@ public class KidclothingApplication {
 				userRepository.save(admin);
 			}
 
-			// Ép hệ thống tạo dữ liệu nếu số lượng sản phẩm đang có ít hơn 20 cái
 			if (productRepository.count() < 20) {
 				System.out.println("====== ĐANG TỰ ĐỘNG BƠM 60 SẢN PHẨM MỚI VÀO DATABASE... ======");
 
 				List<String> categoryNames = Arrays.asList("Quần Áo Bé Trai", "Quần Áo Bé Gái", "Đồ Sơ Sinh", "Phụ Kiện Bé Yêu");
 
-				int imgCounter = 100; // Đổi ID ảnh để lấy ảnh mới
+				int imgCounter = 100;
 				for (String catName : categoryNames) {
 					Category cat = new Category();
 					cat.setName(catName);
 					Category savedCat = categoryRepository.save(cat);
 
-					// Tạo 15 sản phẩm cho danh mục này
 					for (int i = 1; i <= 15; i++) {
 						Product p = new Product();
 						p.setName("Sản phẩm " + catName + " - Mẫu cao cấp số " + i);
-
-						// Random giá từ 99k đến 399k làm tròn
 						double randomPrice = Math.round((99000 + (Math.random() * 300000)) / 1000) * 1000;
 						p.setPrice(randomPrice);
-
-						p.setDescription("Chất liệu an toàn tuyệt đối cho làn da nhạy cảm của bé yêu. Thiết kế năng động, thấm hút mồ hôi siêu tốt giúp bé thoải mái vận động cả ngày dài. Hàng chính hãng KidClothing.");
-
-						// Link ảnh ngẫu nhiên chất lượng cao
+						p.setDescription("Chất liệu an toàn tuyệt đối cho làn da nhạy cảm của bé yêu. Thiết kế năng động, thấm hút mồ hôi siêu tốt giúp bé thoải mái vận động cả ngày dài.");
 						p.setImage("https://picsum.photos/seed/" + (imgCounter++) + "/500/500");
-
 						p.setCategory(savedCat);
-
-						// Đánh dấu 4 sản phẩm đầu của mỗi danh mục là Best Seller để đưa ra trang chủ
 						p.setIsBestSeller(i <= 4);
+
+						// ĐÃ THÊM: Set mặc định mỗi món hàng có 20 cái trong kho
+						p.setStockQuantity(20);
+
 						p.setCreatedAt(LocalDateTime.now().minusDays(i));
 
 						productRepository.save(p);

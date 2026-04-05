@@ -11,11 +11,19 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
     private Double price;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     private String image;
     private Boolean isBestSeller;
+
+    // ĐÃ THÊM: Quản lý số lượng tồn kho (Mặc định là 20 nếu không nhập)
+    @Column(name = "stock_quantity", nullable = false)
+    private Integer stockQuantity = 20;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;

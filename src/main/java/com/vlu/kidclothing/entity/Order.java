@@ -15,12 +15,12 @@ public class Order {
     @Column(name = "total_price")
     private Double totalPrice;
 
-    private String status = "PENDING"; // Trạng thái: Chờ xử lý
+    private String status = "PENDING";
 
-    @Column(name = "created_at", insertable = false, updatable = false)
+    // ĐÃ SỬA: Xóa insertable = false để lưu được ngày giờ hiện tại
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    // Tạm thời cho phép khách vãng lai đặt hàng (user_id có thể null)
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
     private User user;

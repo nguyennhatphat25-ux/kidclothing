@@ -1,39 +1,102 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:text="${product.name} + ' - KidClothing'">Chi Tiết Sản Phẩm</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 flex flex-col min-h-screen">
+<body class="bg-white font-sans text-gray-800 flex flex-col min-h-screen m-0 p-0">
 
-<nav class="bg-blue-600 shadow-lg p-4 text-white text-center font-bold text-xl">
-    <a th:href="@{/}"><i class="fa-solid fa-arrow-left mr-2"></i> Trở về Trang chủ</a>
-</nav>
+<div class="bg-pink-500 text-white text-sm text-center py-2 font-medium tracking-wide w-full m-0">
+    <i class="fa-solid fa-gift mr-2"></i> Miễn phí giao hàng toàn quốc cho đơn từ 500.000Đ
+</div>
 
-<main class="flex-grow container mx-auto px-4 mt-10 mb-12">
-    <div class="bg-white rounded-xl shadow-lg p-8 max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
-        <div class="md:w-1/2 bg-gray-100 rounded-lg flex items-center justify-center min-h-[400px]">
-            <i class="fa-solid fa-image text-6xl text-gray-400"></i>
+<header class="bg-white border-b border-pink-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
+        <a th:href="@{/}" class="text-3xl font-extrabold text-pink-600 flex items-center gap-2 hover:text-pink-700 transition">
+            <i class="fa-solid fa-face-smile-wink text-pink-500 mr-1"></i> KidClothing
+        </a>
+
+        <form th:action="@{/search}" method="get" class="flex-1 max-w-xl mx-8 relative">
+            <input type="text" name="keyword" class="w-full border-2 border-pink-200 rounded-full pl-5 pr-12 py-2.5 focus:outline-none focus:border-pink-500 transition shadow-sm text-gray-700" placeholder="Ba mẹ muốn tìm đồ gì cho bé yêu?">
+            <button type="submit" class="absolute right-4 top-3 text-pink-400 hover:text-pink-600 transition"><i class="fa-solid fa-magnifying-glass text-lg"></i></button>
+        </form>
+
+        <div class="flex items-center space-x-6">
+            <div sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}" class="text-gray-500 hover:text-pink-600 flex flex-col items-center transition">
+                    <i class="fa-regular fa-user text-xl mb-1"></i>
+                    <span class="text-xs font-semibold">Đăng nhập</span>
+                </a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <a th:href="@{/profile}" class="text-pink-600 hover:text-pink-800 flex flex-col items-center transition">
+                    <i class="fa-solid fa-circle-user text-xl mb-1"></i>
+                    <span class="text-xs font-bold" th:text="${currentUser.fullName}">User</span>
+                </a>
+            </div>
+            <a th:href="@{/cart}" class="text-gray-500 hover:text-pink-600 flex flex-col items-center transition relative">
+                <div class="relative">
+                    <i class="fa-solid fa-bag-shopping text-2xl mb-1"></i>
+                    <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow border border-white">Giỏ</span>
+                </div>
+                <span class="text-xs font-semibold">Giỏ hàng</span>
+            </a>
+        </div>
+    </div>
+
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ul class="flex justify-center space-x-8 font-bold text-gray-600 py-3 text-sm uppercase tracking-wider overflow-x-auto">
+            <li><a th:href="@{/}" class="hover:text-pink-600 transition whitespace-nowrap text-gray-800">Trang Chủ</a></li>
+            <li th:each="cat : ${menuCategories}">
+                <a th:href="@{/category/{id}(id=${cat.id})}"
+                   class="hover:text-pink-500 transition whitespace-nowrap"
+                   th:classappend="${product.category != null and product.category.id == cat.id} ? 'text-pink-600 border-b-2 border-pink-600 pb-1' : ''"
+                   th:text="${cat.name}">Danh mục</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 mb-16 w-full">
+    <div class="bg-white rounded-3xl shadow-xl border border-pink-100 p-8 flex flex-col md:flex-row gap-10">
+        <div class="md:w-1/2 bg-pink-50 rounded-2xl flex items-center justify-center min-h-[400px] overflow-hidden border border-pink-100 p-4">
+            <img th:if="${product.image != null and !product.image.isEmpty()}" th:src="${product.image}" class="object-cover w-full h-full rounded-xl shadow-sm hover:scale-105 transition duration-500" alt="Sản phẩm">
+            <i th:unless="${product.image != null and !product.image.isEmpty()}" class="fa-solid fa-image text-8xl text-pink-200"></i>
         </div>
 
         <div class="md:w-1/2 flex flex-col justify-center">
-            <h1 class="text-3xl font-bold text-gray-800 mb-4" th:text="${product.name}">Tên sản phẩm</h1>
-            <p class="text-red-600 text-3xl font-extrabold mb-6" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Giá</p>
+            <div class="mb-2 flex items-center gap-2">
+                <span class="bg-pink-100 text-pink-600 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider" th:text="${product.category.name}">Danh mục</span>
+                <span th:if="${product.isBestSeller}" class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider"><i class="fa-solid fa-star text-yellow-300 mr-1"></i> HOT</span>
 
-            <div class="mb-6">
-                <h3 class="text-gray-700 font-bold mb-2">Mô tả chi tiết:</h3>
-                <p class="text-gray-600 leading-relaxed" th:text="${product.description}">Mô tả sản phẩm sẽ hiển thị ở đây...</p>
+                <span th:if="${product.stockQuantity > 0}" class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-green-200" th:text="'Còn ' + ${product.stockQuantity} + ' cái'"></span>
+                <span th:unless="${product.stockQuantity > 0}" class="bg-gray-200 text-gray-600 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Hết hàng</span>
+            </div>
+
+            <h1 class="text-4xl font-extrabold text-gray-800 mb-4 leading-tight" th:text="${product.name}">Tên sản phẩm</h1>
+
+            <div class="bg-pink-50 rounded-xl p-6 mb-6 border border-pink-100 flex items-center gap-4">
+                <p class="text-rose-500 text-4xl font-black" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-gray-800 font-bold text-lg mb-3 border-b border-pink-100 pb-2">Mô tả chi tiết bé yêu:</h3>
+                <p class="text-gray-600 leading-relaxed font-medium" th:text="${product.description}"></p>
             </div>
 
             <div class="mt-auto">
-                <a th:href="@{/cart/add/{id}(id=${product.id})}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg text-lg shadow-lg transition transform hover:-translate-y-1">
+                <a th:if="${product.stockQuantity > 0}" th:href="@{/cart/add/{id}(id=${product.id})}" class="block w-full text-center bg-pink-500 hover:bg-pink-600 text-white font-black py-4 rounded-2xl text-lg shadow-lg transition transform hover:-translate-y-1">
                     <i class="fa-solid fa-cart-plus mr-2"></i> THÊM VÀO GIỎ HÀNG
                 </a>
+                <button th:unless="${product.stockQuantity > 0}" disabled class="block w-full text-center bg-gray-300 text-gray-500 font-black py-4 rounded-2xl text-lg cursor-not-allowed">
+                    <i class="fa-solid fa-box-open mr-2"></i> TẠM HẾT HÀNG
+                </button>
             </div>
         </div>
     </div>
 </main>
 
+<div th:replace="~{user/fragments :: footer}"></div>
 </body>
 </html>

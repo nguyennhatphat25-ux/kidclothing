@@ -77,4 +77,19 @@ public class HomeController {
         // Dùng chung giao diện shop.html để hiển thị kết quả tìm kiếm cho đồng bộ
         return "user/shop";
     }
+
+    // 4. TRANG CHI TIẾT SẢN PHẨM (FIX LỖI 404 KHI BẤM VÀO SẢN PHẨM Ở ĐÂY)
+    @GetMapping("/product/{id}")
+    public String productDetail(@PathVariable("id") Integer id, Model model) {
+        Product product = productService.getProductById(id);
+
+        // Nếu nhập ID tầm bậy không có thật, đẩy về trang chủ
+        if (product == null) {
+            return "redirect:/";
+        }
+
+        // Gửi dữ liệu sản phẩm ra HTML
+        model.addAttribute("product", product);
+        return "user/detail";
+    }
 }
